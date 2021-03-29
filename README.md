@@ -1,1 +1,1 @@
-# MoneyMoves
+# League of Legends - Cooldown Bot
