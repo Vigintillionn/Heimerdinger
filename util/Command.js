@@ -10,7 +10,7 @@ const Discord = require("discord.js");
  * @property {Array} aliases The aliases of the command
  */
 class Command {
-  constructor(client, {name, description = "_No description_", aliases = [], usage, category, } = {}) {
+  constructor(client, {name, description = "_No description_", aliases = [], usage, category, enabled } = {}) {
     this.client = client;
 
     this.name = name;
@@ -18,6 +18,7 @@ class Command {
     this.aliases = aliases || false;
     this.usage = usage || false;
     this.category = category || false;
+    this.enabled = enabled || true;
   }
 }
 

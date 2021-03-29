@@ -59,7 +59,7 @@ class TopazClient extends Client {
     if (message.author.bot || !message.guild) return;
     if (this.debugging) console.log(chalk.keyword("pink")("DEBUG") + " | Recieved a message!");
 
-    let prefixes = ["a!"]
+    let prefixes = ["h!"]
     let prefix = false;
     for (const thisPrefix of prefixes) {
       if (message.content.toLowerCase().startsWith(thisPrefix.toLowerCase())) prefix = thisPrefix.toLowerCase();
@@ -70,7 +70,7 @@ class TopazClient extends Client {
     if (!prefix) return;
 
     message.embed = () => {
-      let color = "#FFFFF1";
+      let color = "#FFA500";
       let embed = new Discord.MessageEmbed().setColor(color);
       return embed;
     }

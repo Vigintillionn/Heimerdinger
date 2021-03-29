@@ -9,7 +9,8 @@ module.exports = class PingCmd extends Command {
       name: "cooldowns",
       aliases: ["cd"],
       description: "View a champ's cooldowns!",
-      category: "main"
+      category: "main",
+      usage: "cooldowns [champ]"
     });
   }
 
@@ -17,6 +18,11 @@ module.exports = class PingCmd extends Command {
     this.message = message;
     let cooldowns = {...this.client.champCooldowns.champions, ...oddCases, "aphelios": {} }; // Prep an object with all the champions and their cooldowns
     let champion = false;
+
+    this.abilityHaste = 0;
+    if (!isNaN(args[args.length-1])) this.abilityHaste = parseInt(args[args.length-1]); // Check if player gave up abilityhaste
+
+    if (this.abilityHaste >= 200) this.abilityHaste = 200; // Make sure they don't go too high
 
     if (!args[0]) champion = Object.keys(cooldowns)[Math.floor(Math.random() * Object.keys(cooldowns).length)]; // Get random champion if no champion is given
     else champion = this.client.mostSimilarModule(args[0], Object.keys(cooldowns), 0.5); // Find champion closest to given argument of the user
@@ -70,7 +76,7 @@ module.exports = class PingCmd extends Command {
     let embed = this.message.embed()
       .setTitle(`Cooldowns for ${toTitleCase(champName)}`)
       .setThumbnail(`https://opgg-static.akamaized.net/images/lol/champion/${champName.split(" ").join("").replace(/[\']/g, "")}.png?image=c_scale,q_auto,w_250&v=1615953009`)
-      .setDescription(champion.form ? `Form: **${toTitleCase(champion.form)}**` : "")
+      .setDescription(`${champion.form ? `Form: **${toTitleCase(champion.form)}**\n` : ""}${this.abilityHaste > 0 ? `Ability Haste: **${this.abilityHaste}**` : ""}`)
 
     if (champName.toLowerCase() === "aphelios") { // Make a seperate embed for Aphelios because 200 years
       embed.setDescription("Abilities (except for ult) scale with\nChampion level instead of abilitiy level.")
@@ -88,9 +94,9 @@ module.exports = class PingCmd extends Command {
     if (champion["q"]) embed.addField("🔹 **Q**", this.getCooldownLevel(champion["q"]), true) // Add the cooldowns for the champion's Q
     if (champion["w"]) embed.addField(`🔹 **W** ${champName === "gnar" ? " (Mega Form)" : ""}`, this.getCooldownLevel(champion["w"]), true) // Add the cooldowns for the champion's W
     if (champion["q"] && champion["e"]) embed.addField("⠀", "⠀")
-    if (champion["e"]) embed.addField("🔹 **E**", this.getCooldownLevel(champion["e"]), true)
-    if (champion["r"]) embed.addField(`🔸 **R**${champName === "gnar" ? " (Mega Form)" : ""}`, this.getCooldownLevel(champion["r"]), true) // Add the cooldowns for the champion's E
-    if (champion["passive"]) embed.addField("🔸 **Passive**", champion["passive"].toString().replace(/\%n/g, "\n")); // Add the cooldowns for the champion's R
+    if (champion["e"]) embed.addField("🔹 **E**", this.getCooldownLevel(champion["e"]), true) // Add the cooldowns for the champion's E
+    if (champion["r"]) embed.addField(`🔸 **R**${champName === "gnar" ? " (Mega Form)" : ""}`, this.getCooldownLevel(champion["r"]), true) // Add the cooldowns for the champion's R
+    if (champion["passive"]) embed.addField("🔸 **Passive**", champion["passive"].toString().replace(/\%n/g, "\n")); // Add the cooldowns for the champion's Passive
     return embed;
   }
 
@@ -102,7 +108,7 @@ module.exports = class PingCmd extends Command {
   getCooldownLevel(array) {
     let output = [];
     for (let i = 0; i < array.length; i++) {
-      output.push(`Level ${i+1} ${isNaN(array[i]) ? array[i] : "**" + array[i] + "s**"}`); // Get the proper output of the champion's cooldowns
+      output.push(`Level ${i+1} ${isNaN(array[i]) ? array[i] : "**" + Math.floor(array[i] * (100 / (100 + this.abilityHaste)) * 10) / 10 + "s**"}`); // Get the proper output of the champion's cooldowns
     }
     return output.join("\n");
   }

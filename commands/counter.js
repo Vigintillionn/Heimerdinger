@@ -13,7 +13,8 @@ module.exports = class PingCmd extends Command {
       name: "counters",
       aliases: ["counter"],
       description: "View a champ's counter!",
-      category: "main"
+      category: "main",
+      usage: "counter <champ>"
     });
 
     this.possibleChamps = [
@@ -34,7 +35,7 @@ module.exports = class PingCmd extends Command {
       "veigar", "vel'koz", "vi", "viktor", "vladimir", "volibear", "warwick", "wukong", "xayah", "xerath",
       "xin zhao", "yasuo", "yone", "yorick", "yuumi", "zac", "zed", "ziggs", "zilean", "zoe", "zyra", "seraphine",
       "rell", "viego", "lillia", "gwen", "kennen"
-    ]
+    ];
   }
 
   async run(message, args) {

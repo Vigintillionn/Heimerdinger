@@ -35,11 +35,11 @@ module.exports = class ChampionCooldowns {
       if (this.champions[this.formChamps.includes(champion.Champion.split(" ")[0].toLowerCase()) ? champion.Champion.split(" ")[0].toLowerCase() : champion.Champion.toLowerCase()]) continue;
 
       if (this.formChamps.includes(champion.Champion.split(" ")[0].toLowerCase())) { // Check if champ has multiple forms
-        let secondFormData = data[i + 5];
-        let name = champion.Champion.split(" ")[0];
-        let firstForm = champion.Champion.split(" ")[1];
-        let secondForm = secondFormData.Champion.split(" ")[1];
-        this.champions[name.toLowerCase()] = {
+        let secondFormData = data[i + 5]; // Get the data of the second form of the champion
+        let name = champion.Champion.split(" ")[0]; // Get the actual name of the champion as champs with form are formatted like name form
+        let firstForm = champion.Champion.split(" ")[1]; // Get the first form of the champion
+        let secondForm = secondFormData.Champion.split(" ")[1]; // Get the second for of the champion
+        this.champions[name.toLowerCase()] = { // Add everything to an object
           firstForm: {
             form: firstForm,
             q: [champion["Q1"], champion["Q2"], champion["Q3"], champion["Q4"], champion["Q5"]],
@@ -56,7 +56,7 @@ module.exports = class ChampionCooldowns {
           }
         }
       } else {
-        this.champions[champion.Champion.toLowerCase()] = {
+        this.champions[champion.Champion.toLowerCase()] = { // Add everything to an object
           q: [champion["Q1"], champion["Q2"], champion["Q3"], champion["Q4"], champion["Q5"]],
           w: [champion["W1"], champion["W2"], champion["W3"], champion["W4"], champion["W5"]],
           e: [champion["E1"], champion["E2"], champion["E3"], champion["E4"], champion["E5"]],
