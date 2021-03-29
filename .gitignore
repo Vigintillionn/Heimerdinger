@@ -1,3 +1,5 @@
 node_modules/
 *.py
 *.sqlite
+test.xlsx
+token.js
