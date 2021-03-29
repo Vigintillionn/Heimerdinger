@@ -4,11 +4,11 @@ const fs = require("fs");
 const path = require("path");
 //const fetch = require("node-fetch")
 const Message = require("./Message.js");
-const Database = require("./Database.js");
 const Discord = require("discord.js");
 const levenshtein = require(path.join(process.cwd(), "util", "levenshtein.js"));
 const xlsx = require("xlsx")
 const championCooldowns = require(path.join(process.cwd(), "util", "GetChampionCooldowns.js"))
+const token = require(path.join(process.cwd(), "token.js"));
 
 /**
  * The TopazClient
@@ -18,23 +18,13 @@ const championCooldowns = require(path.join(process.cwd(), "util", "GetChampionC
  * @property {Object} config The botconfig
  * @property {Object} commands The loaded commands
  * @property {Object} aliases The aliases of commands
- * @property {Database} db The database
  */
 class TopazClient extends Client {
   constructor(config, options, ...args) {
     super(...args);
     this.config = config;
-    //this.debugMode = options.debugMode;
 
-    this.db = new Database({
-      development: false,
-      name: "database",
-      caching: true,
-      compression: false,
-      cwd: process.cwd()
-    });
-
-    this.login(config.token);
+    this.login(token);
 
     this.on("ready", this.readyHandler);
     this.on("message", this.messageHandler);
