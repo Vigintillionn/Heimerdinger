@@ -35,7 +35,7 @@ class TopazClient extends Client {
     this.aliases = {};
     this.activeChannels = {};
 
-    this.champCooldowns = new championCooldowns(this, "cooldowns.xlsx");
+    this.champCooldowns = new championCooldowns(this, "./constants/cooldowns.xlsx");
   }
 
   /**
