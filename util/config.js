@@ -1,7 +1,6 @@
 module.exports = {
-  token: "NTI1Nzk5OTI0NDgzNDg5Nzky.XB1nVg.hvBsM7nxPNyMJG4jVNI-BN2fpXQ",
   admins: ["183978195551387649", "410177295324545024"],
-  
+
   userData: {
     uuid: false,
     ign: false,

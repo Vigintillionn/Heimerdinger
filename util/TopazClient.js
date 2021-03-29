@@ -145,11 +145,11 @@ class TopazClient extends Client {
       console.log(`${chalk.keyword("orange")(new Date())} ${message}`)
     }
   }
-  mostSimilarModule(item, keys) {
+  mostSimilarModule(item, keys, factor = 0.4) {
     const resp = keys.sort((key1, key2) => {
       return levenshtein.levenshteinRatio(key2, item) - levenshtein.levenshteinRatio(key1, item);
     })[0];
-    if (levenshtein.levenshteinRatio(resp.toLowerCase(), item) < 0.4) return false
+    if (levenshtein.levenshteinRatio(resp.toLowerCase(), item) < factor) return false
     return resp
   }
 }

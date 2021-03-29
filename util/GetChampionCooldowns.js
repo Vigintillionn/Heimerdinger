@@ -6,7 +6,7 @@ module.exports = class ChampionCooldowns {
     this.client = client;
 
     this.champions = {};
-    this.formChamps = ["nidalee", "elise", "rek'sai", "jayce"];
+    this.formChamps = ["nidalee", "elise", "rek'sai", "jayce", "kayn"];
 
     this.readSheet(file)
   }
