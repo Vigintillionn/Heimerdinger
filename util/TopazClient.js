@@ -46,7 +46,7 @@ class TopazClient extends Client {
    */
   readyHandler() {
     console.log(chalk.green("ONLINE") + ` | ${this.user.username} is ready for use.`);
-    this.user.setActivity(`Hardstuck Bronze`, { type: 'WATCHING' })
+    this.user.setActivity(`Dopa vods`, { type: 'WATCHING' })
   }
 
   /**

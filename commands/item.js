@@ -33,24 +33,25 @@ module.exports = class PingCmd extends Command {
         mr: "magic resist",
         hp: "health",
         mana: "mana",
-        hpR: "base health regeneration",
-        manaR: "base mana regeneration",
+        hpR: "base health regen",
+        manaR: "base mana regen",
         crit: "critical strike chance",
         as: "attack speed",
         ms: "movement speed",
 
         ls: "life steal",
         le: "lethality",
-        pmp: "percent magic penetration",
-        hsp: "healing and shielding power",
+        pmp: "magic penetration",
+        hsp: "healing & shielding",
         vamp: "omnivamp",
-        pms: "percent movement speed",
-        arpen: "percent armor penetration",
-        mpen: "flat magic penetration",
+        pms: "movement speed",
+        arpen: "armor penetration",
+        mpen: "magic penetration",
         cdr: "ability haste",
         onhit: "on hit damage"
-
       }
+
+      this.perc = ["hpR", "manaR", "as", "ls", "pmp", "hsp", "vamp", "pms", "arpen"]
 
       this.getStatPrices()
     }
@@ -58,7 +59,6 @@ module.exports = class PingCmd extends Command {
     async run(message, args) {
         let nicknames = { // Nicknames for users to make it easier to access long named items
           bork: "blade of the ruined king",
-          trinity: "trinity force"
         }
 
         let itemList = {...items, ...basicItems }; // Merge both lists of items into one
@@ -70,7 +70,7 @@ module.exports = class PingCmd extends Command {
 
         let stats = "";
         for (const stat of Object.keys(itemData.stats)) {
-          stats += `${toTitleCase(this.statNames[stat])}: **${itemData.stats[stat]}**\n` // Make the stats look pretty
+          stats += `🔸 ${toTitleCase(this.statNames[stat])}: **${itemData.stats[stat]}${this.perc.includes(stat) ? "%" : ""}**\n` // Make the stats look pretty
         }
 
         let rawRecipeOrder = [];
@@ -86,13 +86,18 @@ module.exports = class PingCmd extends Command {
         if (itemData.mythicBonus) mythicBonus = this.getGoldEfficiency(itemData.mythicBonus, itemData.price); // Add a mythic bonus for gold efficiency to mythic items
 
         let embed = message.embed() // Prep the embed
-          .setTitle(`Item info for ${toTitleCase(item)}`)
-          .setDescription(`Price: <:coin:826223682028175481> **${itemData.price.toLocaleString("en")}**\nThis item is: **${goldEfficiency}%** Gold Efficient${mythicBonus ? `\n➥ Gold efficiency goes up by **${mythicBonus}%** for every other Legendary Item` : ""}`)
-          .addField("Stats", stats, true)
+          .setTitle(`Item info`)
+          .setDescription(`Details for ${toTitleCase(item)}:`)
+          .addField("Name", toTitleCase(item), true)
           .addField("⠀", "⠀", true)
-          .setThumbnail(itemData.thumbnail)
-        if (recipeOrder) embed.addField("Recipe", `__Most gold efficient order to build__:\n${recipeOrder.map(item => `**${toTitleCase(item.it)}**: ${item.gEff}% Gold Efficient`).join("\n")}`, true)
-        return message.channel.send(embed) // Send the embed
+          .addField("Price", `Price: <:coin:826223682028175481> **${itemData.price.toLocaleString("en")}**\nThis item is: **${goldEfficiency}%** Gold Efficient${mythicBonus ? `\n➥ Gold efficiency goes up by\n⠀⠀**${mythicBonus}%** for every other\n⠀⠀Legendary Item` : ""}`, true)
+        .addField("⠀", "⠀")
+        .addField("Stats", `${stats}${itemData.mythicBonus ? `🔹 __Mythic Bonus__:\n${Object.keys(itemData.mythicBonus).map(stat => `⠀⠀➥ ${toTitleCase(this.statNames[stat])}: **+${itemData.mythicBonus[stat]}${this.perc.includes(stat) ? "%" : ""}**`).join("\n")}` : ""}`, true)
+        .addField("⠀", "⠀", true)
+        .setThumbnail(itemData.thumbnail)
+        .setFooter("Note: Gold Efficiency does not include passives or actives")
+      if (recipeOrder) embed.addField("Recipe", `__Most gold efficient order to build__:\n${recipeOrder.map(item => `**${toTitleCase(item.it)}**:\n➥ ${item.gEff}% Gold Efficient`).join("\n")}`, true)
+      return message.channel.send(embed) // Send the embed
     }
 
   getStatPrices() {
